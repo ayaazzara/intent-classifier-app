@@ -8,6 +8,8 @@ from preprocessing import *
 from tfidf import TFIDF
 from mlr import MultinomialLogisticRegression
 
+from googletrans import Translator
+
 nltk.download('punkt', quiet=True)
 nltk.download('wordnet', quiet=True)
 nltk.download('stopwords', quiet=True)
@@ -26,6 +28,8 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 
 model_dir = os.path.join(current_path, 'models')
 
+translator = Translator()
+
 
 class Models():
     def __init__(self, tfidf, mlr):
@@ -39,15 +43,41 @@ def input_text():
         return text
 
 
+def translate(text: str) -> str:
+    try:
+        return translator.translate(text, dest='en', src='auto').text
+    except:
+        return text
+
+
+def detect_lang(text: str) -> str:
+    try:
+        return translator.detect(text).lang
+    except:
+        return 'en'
+
+
 def main():
     st.title('Intent Classification Demo')
     st.subheader(
         'Aplikasi ini digunakan untuk klasifikasi intent menggunakan Multinomial Logistic Regression. \n\n Terdapat 4 macam intent yang dapat dideteksi, antara lain: \n 1. Inform: menyampaikan atau memberi informasi. \n 2. Question: bertanya atau menyampaikan pertanyaan. \n 3. Directive: memberikan perintah. \n 4. Commissive: memberikan janji atau komitmen. \n\n Langkah-langkah untuk melakukan prediksi: \n 1. Masukkan text yang ingin diprediksi \n 2. Klik tombol "Predict" \n 3. Hasil prediksi akan ditampilkan di bawah tombol "Predict"')
     models = load_models()
     text = input_text()
-    if text:
-        pred = predict(text, models)
-        st.write(f'The query intent is **{label_kelas[pred[0]]}**')
+
+    if text is None:
+        return
+
+    lang_type = detect_lang(text)
+    if len(text) == 0:
+        return
+
+    if lang_type != 'en':
+        text = translate(text)
+
+    pred = predict(text, models)
+    st.write(f'The query language is **{lang_type}**')
+    st.write(f'The query translated is **{text}**')
+    st.write(f'The query intent is **{label_kelas[pred[0]]}**')
 
 
 def load_models():
