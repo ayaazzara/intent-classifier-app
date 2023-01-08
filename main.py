@@ -41,6 +41,8 @@ def input_text():
 
 def main():
     st.title('Intent Classification Demo')
+    st.subheader(
+        'Aplikasi ini digunakan untuk klasifikasi intent menggunakan Multinomial Logistic Regression. \n\n Terdapat 4 macam intent yang dapat dideteksi, antara lain: \n 1. Inform \n 2. Question \n 3. Directive \n 4. Commissive \n\n Langkah-langkah untuk melakukan prediksi: \n 1. Masukkan text yang ingin diprediksi \n 2. Klik tombol "Predict" \n 3. Hasil prediksi akan ditampilkan di bawah tombol "Predict"')
     models = load_models()
     text = input_text()
     if text:
