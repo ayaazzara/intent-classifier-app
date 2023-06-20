@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 import pickle
+import pandas as pd
 
 from nltk.tokenize import word_tokenize
 
@@ -89,18 +90,18 @@ def load_models():
     model_MLR = os.path.join(model_dir, 'BestMLRModel.sav')
 
     # X, Y Data Train
-    X_train = pickle.load(open(file_x_train, 'rb'))
-    Y_train = pickle.load(open(file_y_train, 'rb'))
+    X_train = pd.read_pickle(open(file_x_train, 'rb'))
+    Y_train = pd.read_pickle(open(file_y_train, 'rb'))
 
     # X, Y Data Test
-    X_test = pickle.load(open(file_x_test, 'rb'))
-    Y_test = pickle.load(open(file_y_test, 'rb'))
+    X_test = pd.read_pickle(open(file_x_test, 'rb'))
+    Y_test = pd.read_pickle(open(file_y_test, 'rb'))
 
     # TF-IDF
-    tfidf = pickle.load(open(file_tfidf, 'rb'))
+    tfidf = pd.read_pickle(open(file_tfidf, 'rb'))
 
     # MLR Model
-    Best_MLR = pickle.load(open(model_MLR, 'rb'))
+    Best_MLR = pd.read_pickle(open(model_MLR, 'rb'))
 
     return Models(tfidf, Best_MLR)
 
